@@ -1,4 +1,4 @@
-= AddressBook Level 4 - User Guide
+= Efficient Learning Scheduler - User Guide
 :site-section: UserGuide
 :toc:
 :toc-title:
@@ -12,9 +12,9 @@ ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
 endif::[]
-:repoURL: https://github.com/se-edu/addressbook-level4
+:repoURL: https://github.com/CS2113-AY1819S2-T11-1/main
 
-By: `Team SE-EDU`      Since: `Jun 2016`      Licence: `MIT`
+By: `Team T11-1`      Since: `Jan 2019`      Licence: `MIT`
 
 == Introduction
 
@@ -67,42 +67,42 @@ Example: add m/CS2113 c/4 t/Wednesday,12-14 t/Tuesday,11-12
 A person can have any number of tags (including 0)
 
 
-== Generating a learning schedule: 'generate'
+=== Generating a learning schedule: 'generate'
 
 Generates a learning schedule based on the modules in the database. A calendar week view will appear in the GUI as seen above in Section 2.
 Format: generate
 
-=== Viewing learning schedule for a specific day: 'dayview'
+==== Viewing learning schedule for a specific day: 'dayview'
 
 Switches the calendar view from week view to day view on a specific date. Can only be done after generate is called.
 Format: dayview DD/MM/YYYY
 Example: dayview 11/02/2019
 
 
-=== Listing all schedule for a specific day: 'daylist'
+==== Listing all schedule for a specific day: 'daylist'
 Lists down all tasks for one particular day in a list format (and not calendar view).
 Can only be done after generate is called.Format: daylist DD/MM/YYYY
 Example: daylist 11/02/2019
 
-=== Clearing all schedule: 'clear'
+==== Clearing all schedule: 'clear'
 
 Clears the learning schedule and deletes all existing modules in the database.
 Format: clear
 
-=== Undoing previous command: 'undo'
+==== Undoing previous command: 'undo'
 Restores the learning schedule to the state before the previous undoable command was executed.
 Format: undo
 
-=== Redoing previous command: 'redo'
+==== Redoing previous command: 'redo'
 Reverses the most recent undo command.
 Format: redo
 
 
-=== Exiting the program: 'exit'
+==== Exiting the program: 'exit'
 Exits the Efficient Learning Scheduler.
 Format: exit
 
-== Compare two time table: 'tablecompare'
+=== Compare two time table: 'tablecompare'
 compare two time table to find the difference
 Format:tablecompare
 
@@ -122,7 +122,7 @@ The `undo` command fails as there are no undoable commands executed previously.
 `undo` (reverses the `clear` command) +
 `undo` (reverses the `delete 1` command) +
 
-=== Redoing the previously undone command : `redo`
+==== Redoing the previously undone command : `redo`
 
 Reverses the most recent `undo` command. +
 Format: `redo`
@@ -145,7 +145,7 @@ The `redo` command fails as there are no `undo` commands executed previously.
 `redo` (reapplies the `clear` command) +
 // end::undoredo[]
 
-=== Clearing all entries : `clear`
+==== Clearing all entries : `clear`
 
 Clears all entries from the address book. +
 Alias command: 'c' +

@@ -235,6 +235,41 @@ This section describes some noteworthy details on how certain features are imple
 
 // tag::checkAvailability[]
 === Check Availability Feature
+
+//tag::generate[]
+=== Generate interleaved schedule
+==== Future implementation
+
+The scheduling is facilitated by interleaver.
+
+* `ExtractSelfStudyHours()` -- extract all self study hours.
+* `split()` -- split hours into 30 mins blocks.
+* `interleave()` --  interleave blocks.
+* `generate()` --  for each block, insert them into free time slots.
+
+These operations are exposed in the Model interface.
+Given below is a sequence diagram:
+image::interleavingActivityDiagram.png[width="800"]
+
+==== Design Considerations
+===== Aspect: How to split hours
+
+* **Alternative 1 (current choice):** Split into 30 mins blocks.
+** Pros: Easy to implement.
+** Cons: Some people might find 30 mins to be too long/short.
+* **Alternative 2:** Let user decide duration of each block.
+** Pros: More flexibility.
+** Cons: Harder to implement.
+
+==== Logging
+We are using java.util.logging package for logging. The LogsCenter class is used to manage the logging levels and logging destinations. The logging level can be controlled using the logLevel setting in the configuration file. The Logger for a class can be obtained using LogsCenter.getLogger(Class) which will log messages according to the specified logging level. Currently log messages are output through: Console and to a .log file.
+
+==== Configuration
+Certain properties of the application can be controlled (e.g user prefs file location, logging level) through the configuration file (default: config.json).
+
+// tag::undoredo[]
+=== Undo/Redo feature
+
 ==== Current Implementation
 
 The check availability mechanism is facilitated by Efficient Learning Scheduler. It extends Efficient Learning Scheduler Scheduling with a free time slot list for two students, stored internally for each person instance.
