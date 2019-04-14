@@ -34,7 +34,7 @@ public class ActivityListPanel extends UiPart<Region> {
             for (int col = 0; col < activityArray[row].length; col++) {
                 if (activityArray[row][col] != null) {
                     // System.out.println("Adding activities to list: " + activityArray[row][col]);
-                    activityList.add(new Activity(activityArray[row][col], row, col));
+                    activityList.add(new Activity(activityArray[row][col], row, col / 2));
                 }
             }
         }

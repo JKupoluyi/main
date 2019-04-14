@@ -1,4 +1,4 @@
-﻿= Efficient Learning Scheduler- Developer Guide
+= Efficient Learning Scheduler - Developer Guide
 :site-section: DeveloperGuide
 :toc:
 :toc-title:
@@ -286,51 +286,47 @@ We are using java.util.logging package for logging. The LogsCenter class is used
 Certain properties of the application can be controlled (e.g user prefs file location, logging level) through the configuration file (default: config.json).
 //end::interleave[]
 
-//tag::checkAvailability[]
-=== Check Availability between Students Feature
+//tag::addActivityCommand[]
+=== This feature adds an activity to the Student's timetable.
 ==== Current Implementation
 
-The check availability mechanism is facilitated by Efficient Learning Scheduler. It extends Efficient Learning Scheduler Scheduling with a free time slot list for two students, stored internally for each person instance.
-These operations are exposed in the Model interface as Model#getAvailability.
-
+The addActivity mechanism adds a new activity to the students timetable whenever there's a free time slot. This is executed by inserting time, date and name for a particular activity, then the addActivityCommand parser facilitates the addition of the new activity to a 2d array that stores activities.
 Given below is an example usage scenario and how the Check availability behaves at each step.
 
 * **Step 1.** The user launches the application for the first time.
 
-* **Step 2.** The user executes creates a schedule, inputting his modules and CCA’s.
+* **Step 2.** The user adds a person to the timetable.
 
-* **Step 3.** The Efficient Learning Scheduler generates a schedule for said student.
+* **Step 3.** The user executes the addActivity command which requires a day(integer value from 0-6), a time (integer value from 0 - 48) and the name of the activity.
 
-* **Step 4.** The Efficient Learning Scheduler generates a list of free time slots for the student.
+* **Step 4.** The Efficient Learning Scheduler through the addActivityCommandParser, then checks if that slot is available then proceeds to add the activity.
 
-* **Step 5.** The student wants to find available meeting times with another student, in accordance to the Efficient Study Scheduler.
+* **Step 5.** The activity is added to a 2 dimensional array, whose rows represent the day of the week and columns represent the 30 minute block within a day.
 
-* **Step 6.** The compare method compares the free slots available between the two students, and compounds the two lists into a single list of times.
+* **Step 6.** A success message is then displayed to the user in the Command box.
 
-* **Step 7.** The list of available times is displayed to the user.
 
 image::CheckAvailability.png[width="800"]
 
 ==== Design Considerations
 
-===== Aspect: How check availability executes
+===== Aspect: How addActivity executes
 
-* **Alternative 1 (current choice):** Saves a list of empty time slots for each user.
+* **Alternative 1 (current choice):** Edits the persons current timetable.
 ** Pros: It is Easy to implement.
 ** Cons: May have performance issues in terms of memory usage.
-* **Alternative 2:** Compares the time table of two people after it’s generated, then finds available slots.
-** Pros: Will use less memory.
+* **Alternative 2:** Generates a new timetable whenever the user adds something to it.
+** Pros: Will use more memory.
 ** Cons: May have a higher running time depending on how convoluted the schedule is.
 
-===== Aspect: Data structure to support the checkAvailability Command
+===== Aspect: Data structure to support the addActivity Command
 
-* **Alternative 1 (current choice):** Use an ArrayList to store the empty time slots of the students.
+* **Alternative 1 (current choice):** Use a 2d Array of fixed size for each array.
 ** Pros: Easy to implement and understand.
-** Cons: Multiple lists are created and it wastes space.
-* **Alternative 2:** Use a hashMap to store students who have available times together.
-** Pros: Everything is stored in a single data structure.
-** Cons: HashMap might become convoluted.
-
+** Cons: Null spaces in the array consume unnecessary space.
+* **Alternative 2:** Use a hashMap with days representing the Key, and the values being the hours in the day.
+** Pros: Null spaces are avoided.
+** Cons: HashMap is harder to implement.
 ===== Certain properties of the application can be controlled (e.g user prefs file location, logging level) through the configuration file (default: `config.json`).
 
 // tag::checkAvailabilityEvents[]
@@ -343,12 +339,12 @@ This is executed by getting the time and date of the event that user is interest
 
 Given below is an example usage scenario and how the availability checking mechanism behaves at each step:
 
-* **Step 1.** User opens the application and views the upcoming events in NUS for the week of 18th March. UI will show a calendar view of the NUS events
-* **Step 2.** User chooses an event that he/she is interested in. User executes the `checkAvailE` command
-* **Step 3.** The time and date of the event is stored in an `eventTimeDate` object.
-* **Step 4.** Get the user’s `Schedule` from the json storage file.
-* **Step 5.** Using the `eventTimeDate` object, check if there is any event scheduled during the event timing.
-* **Step 6.** Print the availability (whether user can attend the event) into the Command Box.
+* **Step 1.** User opens the application and views the upcoming events in NUS for the week of 18th March.
+* **Step 2.** User chooses an event that he/she is interested in. User executes the `checkAvailEvent` command
+* **Step 3.** The time and date of the event is stored in a `Time` and a `Date` object.
+* **Step 4.** Get the user’s `Timetable` array from the Model component of the application.
+* **Step 5.** Using the `Time` and `Date` object, get the corresponding day and time and check if there is any activity scheduled during the event timing in the user's timetable.
+* **Step 6.** Print the availability (whether the user can attend the event) into the Command Box.
 
 The following activity diagram summarizes what happens when a user executes the command:
 
@@ -364,6 +360,38 @@ image::CheckAvailEActivityDiagram.png[width="800"]
 ** Pros: user can check availability for the whole week (more than 1 event at one time)
 ** Cons: checking mechanism is longer and need to change the view of the result display (implementation is harder)
 // end::checkAvailabilityEvents[]
+
+// tag::listActivityDevGuide[]
+=== List Activity feature
+
+==== Current Implementation
+
+This is a feature to list the activities of a person within the current week.
+This is executed by getting the index of the person from the input command. Using this index, the corresponding person's timetable will be extracted. For every time slot in the timetable, if there is an activity scheduled, show it in the left pane of the application UI.
+
+Given below is an example usage scenario and how the listing activity mechanism works at each step:
+
+* **Step 1.** User opens the application and finds his/her index in the list of persons in the application.
+* **Step 2.** User executes the `listactivity PERSON_INDEX` command.
+* **Step 3.** Using the person index, extract person and get the person's `Timetable` array from the Model component.
+* **Step 4.** Iterate through the 2D `Timetable` array and check for each of the time slot.
+* **Step 5.** If there is an activity scheduled in each of the time slot, add it to the activityList.
+* **Step 6.** For each of the activity in the activityList, creates an ActivityCard in the UI component and shows it in the left panel of the application UI.
+
+The following activity diagram summarizes what happens when a user executes the command:
+
+image::ListActivityDiagram.png[width="800"]
+
+==== Design considerations:
+
+* **Alternative 1 (current choice):** create one ActivityListPanel (UI component) for each person in the database
+** Pros: easy to implement and easy to access
+** Cons: might take up more memory space because of the ActivityListPanel List in the UI component (MainWindow)
+
+* **Alternative 2:** create one ActivityListPanel and contains the activities of every person in the database
+** Pros: takes up less memory
+** Cons: harder to implement, need to filter the activities by a specific person every time ListActivity command is called.
+// end::listActivityDevGuide[]
 
 == Documentation
 
@@ -836,14 +864,15 @@ See this https://github.com/se-edu/addressbook-level4/pull/599[PR] for the step-
 
 *Target user profile*:
 
-* has a need to manage a significant number of contacts
+* has a need to manage personal study schedule
 * prefer desktop apps over other types
 * can type fast
 * prefers typing over mouse input
 * is reasonably comfortable using CLI apps
 
-*Value proposition*: manage contacts faster than a typical mouse/GUI driven app
+*Value proposition*: manages timetable faster than a typical mouse/GUI driven app
 
+// tag::useCases[]
 [appendix]
 == User Stories
 
@@ -862,12 +891,33 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* * *` |new user |generate study schedules by typing a command|learn better via interleaving/spacing
 
+|`* *` |student |view my sleeping patterns |be advised better on when to sleep.
+
+|`* *` |student |view available internships |I know what jobs to apply for.
+
+|`* *` |student |form groups with other people in the class |collaborate more efficiently.
+
+|`* *` |student |get a suggested list of modules|know how to prepare for next semester.
+
 |`* *` |student |view a video on the importance of learning concepts|learn more efficiently
 
+|`* *` |student |modify my timetable |update my schedule when plans change.
+
 |`*` |existing/expert user|find websites|get free pdfs of textbooks for mods.
+
+|`*` |professor |collect data |analyze how students learn
+
+|`*` |student |practice questions |Study for modules on the app.
+
+|`*` |student |view the mods I'm taking this semester |prepare more efficiently for classes.
+
+
+
 |=======================================================================
 
 _{More to be added}_
+
+// end::useCases[]
 
 [appendix]
 == Use Cases
@@ -894,14 +944,6 @@ Use case ends.
 +
 Use case ends.
 
-* 3a. The given index is invalid.
-+
-[none]
-** 3a1. AddressBook shows an error message.
-+
-Use case resumes at step 2.
-
-
 _{More to be added}_
 
 [appendix]
@@ -918,8 +960,8 @@ _{More to be added}_
 * 1.By adding the timetable class, users can search for the module they want, and UI will generate
 the timetable for the specific module
 ** 1a.Module class- extract data from ALSET database, Module Class will be the subclass of TimeSlot
-** 2a.TimeSlot Class - contain Module class
-** 3a.TimeTable Class-contain all the TimeSlots,generate the timeTable
+** 2a.Activity Class - stores modules as activities in the User's timetable.
+** 3a.TimeTable Class-contain all the activities in the user's timetable.
 
 [appendix]
 == Glossary
@@ -933,15 +975,16 @@ A contact detail that is not meant to be shared with others
 [[ALSET]]
 ALSET aims to become a leading hub for learning science and education technology research in Asia, and a provider of impactful programming to support lifelong learning. For more info, visit http://nus.edu.sg/alset/index.html
 
-[[Value proposition:]]
+[[value-proposition]] Value proposition::
 Help NUS students learn in the most efficient way by helping them generate an efficient studying schedule
 
-[[Problem Scope]]
+[[problem-scope]] Problem scope::
+NUS Students who are lazy and would like to check their schedule through the CLI.
 
-[[Work Patterns]]
+[[work-patterns]] Work patterns::
 Work Alone
 
-[[Target Users]]
+[[target-users]] Target users::
 NUS students who prefer typing to create a schedule.
 
 [appendix]
@@ -983,26 +1026,30 @@ These instructions only provide a starting point for testers to work on; testers
 .. Re-launch the app by double-clicking the jar file. +
    Expected: The most recent window size and location is retained.
 
-_{ more test cases ... }_
+// tag::addActivityCommand[]
+=== Add an activity to a person.
 
-=== Deleting a person
-
-. Deleting a person while all persons are listed
+. adds an activity to a persons Timetable.
 
 .. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
-.. Test case: `delete 1` +
-   Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
-.. Test case: `delete 0` +
-   Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
-.. Other incorrect delete commands to try: `delete`, `delete x` (where x is larger than the list size) _{give more}_ +
+.. Test case: `addActivity 1 act/CS2113 day/0 time/13`
+   Expected: an activity 'CS2113' to the first person in the Efficient learning scheduler.
+.. Test case: `addActivity 0 act/CS2113 day/0 time/130` +
+   Expected: No activity is added to anyone. Error details shown in the status message.
+.. Other incorrect addActivity commands to try: `addActivity`, `addActivity x` (where x is larger than the list size) _{give more}_ +
    Expected: Similar to previous.
+// end::addActivityCommand[]
 
-_{ more test cases ... }_
+// tag::addEventTestCase[]
+=== Adding an event
 
-=== Saving data
+. Adding an event to the event calendar
 
-. Dealing with missing/corrupted data files
-
-.. _{explain how to simulate a missing/corrupted file and the expected behavior}_
-
-_{ more test cases ... }_
+.. Test case: `addevent ett/UBS - Unlock Your Potential with us ed/01/04/2019 etm/15:00-16:00 ev/UBS Office`
+   Expected: the event will be successfully added even though there are some missing input arguments, because the rest of the arguments are optional.
+.. Test case: `addevent ett/UBS - Unlock Your Potential with us ed/01/04/2019 etm/15:00-16:00 eta/All Year 1 female students edc/Business Formal eds/Unlock Your Potential with us.`
+   Expected: the event will not be successfully added because the `ev/` argument which is compulsory is missing.
+.. Test case: `addevent ett/UBS - Unlock Your Potential with us ed/29/02/2019 etm/15:00-16:00 ev/UBS Office`
+   Expected: the error message will be shown indicating wrong date (there is no 29th February in 2019).
+.. Other incorrect addevent commands to try: starting time without end time, impossible time (HH more than 24 and MM more than 60)
+   Expected: the error message will be shown indicating wrong time.

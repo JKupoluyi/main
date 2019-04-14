@@ -47,7 +47,8 @@ Users can also keep track of the events in NUS such as recruitment talks or care
 |_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
 |===
 
-include::../UserGuide.adoc[tag=eventcommand,listactivitycommand]
+include::../UserGuide.adoc[tag=eventcommand]
+include::../UserGuide.adoc[tag=listactivitycommand]
 
 == Contributions to the Developer Guide
 
@@ -56,3 +57,5 @@ include::../UserGuide.adoc[tag=eventcommand,listactivitycommand]
 |===
 
 include::../DeveloperGuide.adoc[tag=checkAvailabilityEvents]
+include::../DeveloperGuide.adoc[listActivityDevGuide]
+include::../DeveloperGuide.adoc[addEventTestCase]

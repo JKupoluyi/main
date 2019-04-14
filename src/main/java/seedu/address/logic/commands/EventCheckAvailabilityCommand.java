@@ -68,15 +68,7 @@ public class EventCheckAvailabilityCommand extends Command {
         Person targetPerson = personList.get(personIndex.getZeroBased());
         Event targetEvent = eventList.get(eventIndex.getZeroBased());
 
-        int eventDay = targetEvent.getDate().getDayInt();
-
-        String[][] timetable = targetPerson.getTimeTable().getTimeTableArray();
-        for (int i = 0; i < targetEvent.getTime().getDuration(); i++) {
-            int currTime = Integer.valueOf(targetEvent.getTime().startTime.split(":")[0]) + i;
-            if (timetable[eventDay][currTime] != null) {
-                this.isClash = true;
-            }
-        }
+        this.isClash = checkForClash(targetPerson, targetEvent);
 
         if (this.isClash) {
             return new CommandResult(String.format(MESSAGE_CLASH, targetPerson.getName(),
@@ -90,6 +82,23 @@ public class EventCheckAvailabilityCommand extends Command {
                     personIndex.getZeroBased());
         }
 
+    }
+    /**
+    * Checks for clash
+    */
+    public boolean checkForClash (Person targetPerson, Event targetEvent) {
+        String[][] timetable = targetPerson.getTimeTable().getTimeTableArray();
+        int eventDay = targetEvent.getDate().getDayInt();
+        System.out.println(timetable[1].length);
+
+        for (int i = 0; i < targetEvent.getTime().getDuration(); i++) {
+            int currTime = Integer.valueOf(targetEvent.getTime().startTime.split(":")[0]) + i;
+            System.out.println("currTime in array index: " + currTime * 2);
+            if (timetable[eventDay][currTime * 2] != null | timetable[eventDay][currTime * 2 + 1] != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

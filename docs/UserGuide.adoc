@@ -111,6 +111,7 @@ Example: `listactivity 1`
 // end::listactivitycommand[]
 
 // tag::eventcommand[]
+
 === Adding an event to the event calendar : `addevent`
 
 Adds an event to the event calendar. +
