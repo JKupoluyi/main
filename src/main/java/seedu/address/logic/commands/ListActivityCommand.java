@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import seedu.address.logic.CommandHistory;
 import seedu.address.model.Model;
 
+//@@author windrichie
 /**
  * Lists all activities in a person to the user.
  */

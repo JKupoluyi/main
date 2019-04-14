@@ -7,6 +7,7 @@ import seedu.address.logic.CommandHistory;
 import seedu.address.model.Model;
 import seedu.address.model.event.DateEqualsPredicate;
 
+//@@author windrichie
 /**
  * Finds and lists all events in event calendar whose date is equal to the argument keywords.
  */

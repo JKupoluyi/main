@@ -15,14 +15,14 @@ import java.util.Calendar;
 public class Date {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Date should be in standard DD-MM-YYYY format. Eg. 1-30 for certain months, 1-31 for other months,"
+            "Date should be in standard DD/MM/YYYY format. Eg. 1-30 for certain months, 1-31 for other months,"
                     + " 1-29 in February in leap years.";
     //@@author windrichie-reused
     // regex expression taken from: http://regexlib.com/REDetails.aspx?regexp_id=151
-    public static final String VALIDATION_REGEX = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)"
-            + "(\\/|-|\\.)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\3"
+    public static final String VALIDATION_REGEX = "^(?:(?:31(\\/)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)"
+            + "(\\/)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/)0?2\\3"
             + "(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))"
-            + "$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$";
+            + "$|^(?:0?[1-9]|1\\d|2[0-8])(\\/)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$";
 
     private static final String[] DAY_MAPPING = {"Monday", "Tuesday", "Wednesday", "Thursday",
         "Friday", "Saturday", "Sunday"};

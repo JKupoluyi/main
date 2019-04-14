@@ -58,7 +58,7 @@ public class EditCommand extends Command {
     public static final String INTERLEAVE_MESSAGE_USAGE = INTERLEAVE_COMMAND
             + ": Interleaves the timetable of the person identified "
             + "by the index number used in the displayed person list.\n"
-            + "Parameters: INDEX (must be a positive integer) "
+            + "Parameters: INDEX (any integer between 1 to to max amount of persons) "
             + "Example: " + INTERLEAVE_COMMAND + " 1 ";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
@@ -188,7 +188,8 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, email, address, tags, timeTable, moduleList);
+            return CollectionUtil.isAnyNonNull(
+                    name, phone, email, address, tags, timeTable, moduleList) || toBeInterleaved;
         }
         public void setInterleaved(boolean toBeInterleaved) {
             this.toBeInterleaved = toBeInterleaved;

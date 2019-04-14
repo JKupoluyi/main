@@ -33,11 +33,17 @@ public class Interleaver {
             blocksOfModules.add(moduleBlocks);
         }
         i = blocksOfModules.iterator();
-        while (!blocksOfModules.isEmpty()) {
-            for (int a = 0; a < TimeTable.NUM_DAYS; a++) { // iterate timetable for free slots
-                for (int b = 0; b < TimeTable.NUM_30MINS_BLOCKS; b++) { // starting from 0800
-                    if (person.getTimeTable().getTimeTableArray()[a][b] == null) {
-                        person.getTimeTable().add(new Activity((String) (((Stack) (i.next())).pop())), a, b);
+        while (i.hasNext()) {
+            Stack<String> currentMod = (Stack<String>) i.next();
+            while (!currentMod.empty()) {
+                for (int day = 0; day < TimeTable.NUM_DAYS; day++) { // iterate timetable for free slots
+                    for (int time = 16; time < TimeTable.NUM_30MINS_BLOCKS; time++) { // starting from 0800
+                        if (person.getTimeTable().getTimeTableArray()[day][time] == null) {
+                            person.getTimeTable().add((new Activity("Study " + currentMod.pop())), day, time);
+                            break;
+                        }
+                    }
+                    if (currentMod.empty()) {
                         break;
                     }
                 }

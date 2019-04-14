@@ -232,8 +232,13 @@ public class MainWindow extends UiPart<Stage> {
 
                 if (commandResult.getPersonIndex() > -1) {
                     int personIndex = commandResult.getPersonIndex();
-                    ActivityListPanel updatedPanel = new ActivityListPanel(logic.getTimeTable(personIndex));
-                    activityListPanel.set(personIndex, updatedPanel);
+                    if (personIndex >= activityListPanel.size()) {
+                        ActivityListPanel newPanel = new ActivityListPanel(logic.getTimeTable(personIndex));
+                        activityListPanel.add(personIndex, newPanel);
+                    } else {
+                        ActivityListPanel updatedPanel = new ActivityListPanel(logic.getTimeTable(personIndex));
+                        activityListPanel.set(personIndex, updatedPanel);
+                    }
                     personListPanelPlaceholder.getChildren().add(activityListPanel.get(personIndex).getRoot());
                     activityListPanel.get(commandResult.getPersonIndex()).getRoot().setVisible(true);
                 }
